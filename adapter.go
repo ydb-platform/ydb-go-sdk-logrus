@@ -1,6 +1,7 @@
 package logrus
 
 import (
+	"context"
 	"github.com/sirupsen/logrus"
 	"strings"
 
@@ -13,12 +14,12 @@ type adapter struct {
 	l *logrus.Logger
 }
 
-func (a adapter) Log(params log.Params, msg string, fields ...log.Field) {
-	a.l.WithFields(fieldsToFields(fields, params.Namespace)).Log(lvl2lvl(params.Level), msg)
+func (a adapter) Log(ctx context.Context, msg string, fields ...log.Field) {
+	a.l.WithFields(fieldsToFields(fields, log.NamesFromContext(ctx))).Log(level(ctx), msg)
 }
 
-func lvl2lvl(lvl log.Level) logrus.Level {
-	switch lvl {
+func level(ctx context.Context) logrus.Level {
+	switch log.LevelFromContext(ctx) {
 	case log.TRACE:
 		return logrus.TraceLevel
 	case log.DEBUG:
