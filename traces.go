@@ -9,8 +9,7 @@ import (
 )
 
 func WithTraces(l *logrus.Logger, d trace.Detailer, opts ...log.Option) ydb.Option {
-	a := adapter{l: l}
-	return ydb.WithLogger(a, d, opts...)
+	return ydb.WithLogger(adapter{l: l}, d, opts...)
 }
 
 func Table(l *logrus.Logger, d trace.Detailer, opts ...log.Option) trace.Table {
