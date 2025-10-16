@@ -15,7 +15,12 @@ type adapter struct {
 }
 
 func (a adapter) Log(ctx context.Context, msg string, fields ...log.Field) {
-	a.l.WithFields(fieldsToFields(fields, log.NamesFromContext(ctx))).Log(level(ctx), msg)
+	a.l.WithFields(
+		fieldsToFields(
+			append(log.FieldsFromContext(ctx), fields...),
+			log.NamesFromContext(ctx),
+		),
+	).Log(level(ctx), msg)
 }
 
 func level(ctx context.Context) logrus.Level {
